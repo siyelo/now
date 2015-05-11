@@ -39,6 +39,14 @@ func (now *Now) BeginningOfMonth() time.Time {
 	return t.Add(d)
 }
 
+func (now *Now) BeginningOfLastMonth() time.Time {
+	oneDayAgo := -24 * time.Hour
+	lastMonth := now.BeginningOfMonth().Add(oneDayAgo)
+
+	return New(lastMonth).BeginningOfMonth()
+}
+
+
 func (now *Now) BeginningOfYear() time.Time {
 	t := now.BeginningOfDay()
 	d := time.Duration(-int(t.YearDay())+1) * 24 * time.Hour
@@ -63,6 +71,13 @@ func (now *Now) EndOfWeek() time.Time {
 
 func (now *Now) EndOfMonth() time.Time {
 	return now.BeginningOfMonth().AddDate(0, 1, 0).Add(-time.Nanosecond)
+}
+
+func (now *Now) EndOfLastMonth() time.Time {
+	oneDayAgo := -24 * time.Hour
+	lastMonth := now.BeginningOfMonth().Add(oneDayAgo)
+
+	return New(lastMonth).EndOfMonth()
 }
 
 func (now *Now) EndOfYear() time.Time {

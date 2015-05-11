@@ -45,6 +45,10 @@ func TestBeginningOf(t *testing.T) {
 	if New(n).BeginningOfYear().Format(format) != "2013-01-01 00:00:00" {
 		t.Errorf("BeginningOfYear")
 	}
+
+	if New(n).BeginningOfLastMonth().Format(format) != "2013-10-01 00:00:00" {
+		t.Errorf("BeginningOfLastMonth")
+	}
 }
 
 func TestEndOf(t *testing.T) {
@@ -89,6 +93,24 @@ func TestEndOf(t *testing.T) {
 	if New(n2).EndOfMonth().Format(format) != "1900-02-28 23:59:59.999999999" {
 		t.Errorf("EndOfMonth")
 	}
+
+	lastMonth := New(n).EndOfLastMonth().Format(format)
+	if lastMonth != "2013-10-31 23:59:59.999999999" {
+		t.Errorf("EndOfLastMonth %s",  lastMonth)
+	}
+
+	march_time := time.Date(2014, 03, 18, 17, 51, 49, 123456789, time.UTC)
+	lastMonth = New(march_time).EndOfLastMonth().Format(format)
+	if lastMonth != "2014-02-28 23:59:59.999999999" {
+		t.Errorf("EndOfLastMonth on non-leap year: %s", lastMonth)
+	}
+
+	leap_year_march_time := time.Date(2012, 03, 18, 17, 51, 49, 123456789, time.UTC) 	// 2012 was a leap year
+	lastMonth = New(leap_year_march_time).EndOfLastMonth().Format(format)
+	if lastMonth != "2012-02-29 23:59:59.999999999" {
+		t.Errorf("EndOfLastMonth on leap year: %s", lastMonth)
+	}
+
 }
 
 func TestMondayAndSunday(t *testing.T) {
@@ -205,6 +227,7 @@ func Example() {
 	FirstDayMonday = true // Set Monday as first day
 	BeginningOfWeek()     // 2013-11-18 00:00:00 Mon
 	BeginningOfMonth()    // 2013-11-01 00:00:00 Fri
+	BeginningOfLastMonth()    // 2013-10-01 00:00:00 Fri
 	BeginningOfYear()     // 2013-01-01 00:00:00 Tue
 
 	EndOfMinute() // 2013-11-18 17:51:59.999999999 Mon
@@ -215,6 +238,7 @@ func Example() {
 	FirstDayMonday = true // Set Monday as first day
 	EndOfWeek()           // 2013-11-24 23:59:59.999999999 Sun
 	EndOfMonth()          // 2013-11-30 23:59:59.999999999 Sat
+	EndOfLastMonth()      // 2013-10-31 23:59:59.999999999 Sat
 	EndOfYear()           // 2013-12-31 23:59:59.999999999 Tue
 
 	// Use another time
